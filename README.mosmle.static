@@ -1,0 +1,47 @@
+ * maine.c -- Start-up code for embedded, derived from main.c
+ * by pts@fazekas.hu at Mon Jan 24 13:47:46 CET 2005
+ * -- Thu Jan 27 11:46:38 CET 2005
+ *
+ * Some docs about mosmle.static:
+ *
+ * -- mosmle.static is the most compact Linux port of Moscow ML by
+ *    Péter Szabó <pts@fazekas.hu>
+ * -- mosmle.static doesn't need any files (except for its own executable)
+ *    to operate; it also runs from any directory
+ * -- mosmle.static runs on Linux, and it is libc-independent
+ * -- mosmltop and basic *.ui and *.uo are integrated into the mosmle.static
+ *    executable
+ * -- loading .so or .dll files (modules written in C) is not supported
+ * -- the following modules are integrated and preloaded:
+ *    Array BasicIO Char CharArray CharVector List
+ *    Misc Nonstdio Option Strbase String StringCvt TextIO
+ *    Vector Word Word8 Word8Array Word8Vector Int
+ * -- the following modules are integrated but not preloaded: Real
+ * -- command line usage:
+ *    mosmle.static [<option> [...] <fake-argv0>] [<arg-to-toplevel> ...]
+ *
+ *    --fork  fork a child process and read its output via pipe()s.
+ *       This must be the first <option> specified. The input of the child
+ *       provess will be EOF (similar to /dev/null), so the use of
+ *       --prog= or --query is recommended, for example:
+ *
+ *         mosmle.static --fork --timeout=2 \
+             --prog='fun f x = f x; f 42' a prog.sml
+ *
+ *    --timeout=<secs>  alarm() in <secs> seconds from startup
+ *
+ *    --safe  disable the C functions callable from SML that might be used
+ *      to compromise system security (for example, sys_stem_command() and all
+ *      filesystem operations). Reading and writing files from the disk will
+ *      be completely disabled.
+ *
+ *    --prog=<contents>  Create an in-memory file named prog.sml with the
+ *      specified contents. For example:
+ *
+ *         mosml.static --prog=84/2 a prog.sml
+ * 
+ *    --query=<contents>  Create an in-memory file named query.sml with the
+ *      specified contents. For example:
+ *
+ *         mosmle.static "--prog=fun f x=x+x" --query="f 21" a \
+             prog.sml query.sml
